@@ -9,22 +9,23 @@ import {
   GAME_COPIED_MESSAGE,
   NOT_ENOUGH_LETTERS_MESSAGE,
   WORD_NOT_FOUND_MESSAGE,
-  CORRECT_WORD_MESSAGE,
+  EDIT_DISTANCE_TOO_LARGE_MESSAGE,
   HARD_MODE_ALERT_MESSAGE,
   DISCOURAGE_INAPP_BROWSER_TEXT,
 } from './constants/strings'
 import {
-  MAX_CHALLENGES,
   REVEAL_TIME_MS,
   WELCOME_INFO_MODAL_MS,
   DISCOURAGE_INAPP_BROWSERS,
+  MAX_EDIT_DISTANCE,
 } from './constants/settings'
 import {
   isWordInWordList,
-  isWinningWord,
-  solution,
+  startWord,
+  endWord,
   findFirstUnusedReveal,
   unicodeLength,
+  getEditDistance,
 } from './lib/words'
 import { addStatsForCompletedGame, loadStats } from './lib/stats'
 import {
@@ -56,7 +57,7 @@ function App() {
   const [isMigrateStatsModalOpen, setIsMigrateStatsModalOpen] = useState(false)
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
   const [currentRowClass, setCurrentRowClass] = useState('')
-  const [isGameLost, setIsGameLost] = useState(false)
+  const [isGameLost] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem('theme')
       ? localStorage.getItem('theme') === 'dark'
@@ -70,18 +71,8 @@ function App() {
   const [isRevealing, setIsRevealing] = useState(false)
   const [guesses, setGuesses] = useState<string[]>(() => {
     const loaded = loadGameStateFromLocalStorage()
-    if (loaded?.solution !== solution) {
+    if (loaded?.endWord !== endWord) {
       return []
-    }
-    const gameWasWon = loaded.guesses.includes(solution)
-    if (gameWasWon) {
-      setIsGameWon(true)
-    }
-    if (loaded.guesses.length === MAX_CHALLENGES && !gameWasWon) {
-      setIsGameLost(true)
-      showErrorAlert(CORRECT_WORD_MESSAGE(solution), {
-        persist: true,
-      })
     }
     return loaded.guesses
   })
@@ -151,14 +142,14 @@ function App() {
   }
 
   useEffect(() => {
-    saveGameStateToLocalStorage({ guesses, solution })
+    saveGameStateToLocalStorage({ guesses, endWord })
   }, [guesses])
 
   useEffect(() => {
     if (isGameWon) {
       const winMessage =
         WIN_MESSAGES[Math.floor(Math.random() * WIN_MESSAGES.length)]
-      const delayMs = REVEAL_TIME_MS * solution.length
+      const delayMs = REVEAL_TIME_MS * endWord.length
 
       showSuccessAlert(winMessage, {
         delayMs,
@@ -169,14 +160,13 @@ function App() {
     if (isGameLost) {
       setTimeout(() => {
         setIsStatsModalOpen(true)
-      }, (solution.length + 1) * REVEAL_TIME_MS)
+      }, (endWord.length + 1) * REVEAL_TIME_MS)
     }
   }, [isGameWon, isGameLost, showSuccessAlert])
 
   const onChar = (value: string) => {
     if (
-      unicodeLength(`${currentGuess}${value}`) <= solution.length &&
-      guesses.length < MAX_CHALLENGES &&
+      unicodeLength(`${currentGuess}${value}`) <= endWord.length &&
       !isGameWon
     ) {
       setCurrentGuess(`${currentGuess}${value}`)
@@ -194,7 +184,7 @@ function App() {
       return
     }
 
-    if (!(unicodeLength(currentGuess) === solution.length)) {
+    if (!(unicodeLength(currentGuess) === endWord.length)) {
       setCurrentRowClass('jiggle')
       return showErrorAlert(NOT_ENOUGH_LETTERS_MESSAGE, {
         onClose: clearCurrentRowClass,
@@ -206,6 +196,18 @@ function App() {
       return showErrorAlert(WORD_NOT_FOUND_MESSAGE, {
         onClose: clearCurrentRowClass,
       })
+    }
+
+    const lastWord =
+      guesses.length > 0 ? guesses[guesses.length - 1] : startWord
+    if (getEditDistance(currentGuess, lastWord) > MAX_EDIT_DISTANCE) {
+      setCurrentRowClass('jiggle')
+      return showErrorAlert(
+        EDIT_DISTANCE_TOO_LARGE_MESSAGE(MAX_EDIT_DISTANCE),
+        {
+          onClose: clearCurrentRowClass,
+        }
+      )
     }
 
     // enforce hard mode - all guesses must contain all previously revealed letters
@@ -224,30 +226,15 @@ function App() {
     // chars have been revealed
     setTimeout(() => {
       setIsRevealing(false)
-    }, REVEAL_TIME_MS * solution.length)
+    }, REVEAL_TIME_MS * endWord.length)
 
-    const winningWord = isWinningWord(currentGuess)
-
-    if (
-      unicodeLength(currentGuess) === solution.length &&
-      guesses.length < MAX_CHALLENGES &&
-      !isGameWon
-    ) {
+    if (unicodeLength(currentGuess) === endWord.length && !isGameWon) {
       setGuesses([...guesses, currentGuess])
       setCurrentGuess('')
 
-      if (winningWord) {
+      if (getEditDistance(currentGuess, endWord) <= MAX_EDIT_DISTANCE) {
         setStats(addStatsForCompletedGame(stats, guesses.length))
         return setIsGameWon(true)
-      }
-
-      if (guesses.length === MAX_CHALLENGES - 1) {
-        setStats(addStatsForCompletedGame(stats, guesses.length + 1))
-        setIsGameLost(true)
-        showErrorAlert(CORRECT_WORD_MESSAGE(solution), {
-          persist: true,
-          delayMs: REVEAL_TIME_MS * solution.length + 1,
-        })
       }
     }
   }
@@ -262,18 +249,20 @@ function App() {
       <div className="pt-2 px-1 pb-8 md:max-w-7xl w-full mx-auto sm:px-6 lg:px-8 flex flex-col grow">
         <div className="pb-6 grow">
           <Grid
-            solution={solution}
+            startWord={startWord}
+            endWord={endWord}
             guesses={guesses}
             currentGuess={currentGuess}
             isRevealing={isRevealing}
             currentRowClassName={currentRowClass}
+            isGameWon={isGameWon}
           />
         </div>
         <Keyboard
           onChar={onChar}
           onDelete={onDelete}
           onEnter={onEnter}
-          solution={solution}
+          endWord={endWord}
           guesses={guesses}
           isRevealing={isRevealing}
         />
@@ -284,7 +273,7 @@ function App() {
         <StatsModal
           isOpen={isStatsModalOpen}
           handleClose={() => setIsStatsModalOpen(false)}
-          solution={solution}
+          endWord={endWord}
           guesses={guesses}
           gameStats={stats}
           isGameLost={isGameLost}

@@ -12,7 +12,7 @@ export const isWordInWordList = (word: string) => {
 }
 
 export const isWinningWord = (word: string) => {
-  return solution === word
+  return startWord === word
 }
 
 // build a set of previously revealed letters - present and correct
@@ -25,7 +25,7 @@ export const findFirstUnusedReveal = (word: string, guesses: string[]) => {
 
   const lettersLeftArray = new Array<string>()
   const guess = guesses[guesses.length - 1]
-  const statuses = getGuessStatuses(solution, guess)
+  const statuses = getGuessStatuses(startWord, guess)
   const splitWord = unicodeSplit(word)
   const splitGuess = unicodeSplit(guess)
 
@@ -74,6 +74,42 @@ export const localeAwareUpperCase = (text: string) => {
     : text.toUpperCase()
 }
 
+// Compute the edit distance between the two given strings
+// From: https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#JavaScript
+export const getEditDistance = (a : string, b: string) => {
+  if (a.length === 0) return b.length; 
+  if (b.length === 0) return a.length;
+
+  var matrix = [];
+
+  // increment along the first column of each row
+  var i;
+  for (i = 0; i <= b.length; i++) {
+    matrix[i] = [i];
+  }
+
+  // increment each column in the first row
+  var j;
+  for (j = 0; j <= a.length; j++) {
+    matrix[0][j] = j;
+  }
+
+  // Fill in the rest of the matrix
+  for (i = 1; i <= b.length; i++) {
+    for (j = 1; j <= a.length; j++) {
+      if (b.charAt(i-1) === a.charAt(j-1)) {
+        matrix[i][j] = matrix[i-1][j-1];
+      } else {
+        matrix[i][j] = Math.min(matrix[i-1][j-1] + 1, // substitution
+                                Math.min(matrix[i][j-1] + 1, // insertion
+                                         matrix[i-1][j] + 1)); // deletion
+      }
+    }
+  }
+
+  return matrix[b.length][a.length];
+}
+
 export const getWordOfDay = () => {
   // January 1, 2022 Game Epoch
   const epoch = new Date(2022, 0)
@@ -90,10 +126,12 @@ export const getWordOfDay = () => {
   nextDay.setDate(today.getDate() + 1)
 
   return {
-    solution: localeAwareUpperCase(WORDS[index % WORDS.length]),
-    solutionIndex: index,
+    startWord: localeAwareUpperCase(WORDS[index % WORDS.length]),
+    startIndex: index,
+    endWord: localeAwareUpperCase(WORDS[(index + 10) % WORDS.length]),
+    endIndex: index + 10,
     tomorrow: nextDay.valueOf(),
   }
 }
 
-export const { solution, solutionIndex, tomorrow } = getWordOfDay()
+export const { startWord, startIndex, endWord, endIndex,tomorrow } = getWordOfDay()

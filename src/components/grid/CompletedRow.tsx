@@ -3,13 +3,13 @@ import { Cell } from './Cell'
 import { unicodeSplit } from '../../lib/words'
 
 type Props = {
-  solution: string
+  endWord: string
   guess: string
   isRevealing?: boolean
 }
 
-export const CompletedRow = ({ solution, guess, isRevealing }: Props) => {
-  const statuses = getGuessStatuses(solution, guess)
+export const CompletedRow = ({ endWord, guess, isRevealing }: Props) => {
+  const statuses = getGuessStatuses(endWord, guess)
   const splitGuess = unicodeSplit(guess)
 
   return (

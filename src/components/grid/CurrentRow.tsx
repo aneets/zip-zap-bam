@@ -1,5 +1,5 @@
 import { Cell } from './Cell'
-import { solution, unicodeSplit } from '../../lib/words'
+import { endWord, unicodeSplit } from '../../lib/words'
 
 type Props = {
   guess: string
@@ -8,7 +8,7 @@ type Props = {
 
 export const CurrentRow = ({ guess, className }: Props) => {
   const splitGuess = unicodeSplit(guess)
-  const emptyCells = Array.from(Array(solution.length - splitGuess.length))
+  const emptyCells = Array.from(Array(endWord.length - splitGuess.length))
   const classes = `flex justify-center mb-1 ${className}`
 
   return (

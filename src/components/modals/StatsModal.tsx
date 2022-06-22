@@ -18,7 +18,7 @@ import { ENABLE_MIGRATE_STATS } from '../../constants/settings'
 type Props = {
   isOpen: boolean
   handleClose: () => void
-  solution: string
+  endWord: string
   guesses: string[]
   gameStats: GameStats
   isGameLost: boolean
@@ -34,7 +34,7 @@ type Props = {
 export const StatsModal = ({
   isOpen,
   handleClose,
-  solution,
+  endWord: solution,
   guesses,
   gameStats,
   isGameLost,
