@@ -1,4 +1,3 @@
-import { Cell } from '../grid/Cell'
 import { BaseModal } from './BaseModal'
 import { MAX_EDIT_DISTANCE } from '../../constants/settings'
 
