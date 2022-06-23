@@ -21,7 +21,6 @@ export const Grid = ({
   currentRowClassName,
   isGameWon,
 }: Props) => {
-
   return (
     <>
       <EndRow word={startWord} />
