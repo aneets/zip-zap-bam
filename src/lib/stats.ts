@@ -17,7 +17,9 @@ export const addStatsForCompletedGame = (
   stats.currentStreak += 1
 
   if (count >= stats.winDistribution.length) {
-    stats.winDistribution = stats.winDistribution.concat(new Array(count + 1 - stats.winDistribution.length).fill(0))
+    stats.winDistribution = stats.winDistribution.concat(
+      new Array(count + 1 - stats.winDistribution.length).fill(0)
+    )
   }
   stats.winDistribution[count] += 1
 
