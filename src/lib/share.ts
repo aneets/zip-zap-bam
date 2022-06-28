@@ -1,7 +1,6 @@
 import { getGuessStatuses } from './statuses'
 import { startIndex, unicodeSplit } from './words'
 import { GAME_TITLE } from '../constants/strings'
-import { MAX_CHALLENGES } from '../constants/settings'
 import { UAParser } from 'ua-parser-js'
 
 const webShareApiDeviceTypes: string[] = ['mobile', 'smarttv', 'wearable']
@@ -21,7 +20,7 @@ export const shareStatus = (
   const textToShare =
     `${GAME_TITLE} ${startIndex} ${
       lost ? 'X' : guesses.length
-    }/${MAX_CHALLENGES}${isHardMode ? '*' : ''}\n\n` +
+    } ${isHardMode ? '*' : ''}\n\n` +
     generateEmojiGrid(
       solution,
       guesses,

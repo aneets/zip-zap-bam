@@ -1,4 +1,3 @@
-import { MAX_CHALLENGES } from '../constants/settings'
 import {
   GameStats,
   loadStatsFromLocalStorage,
@@ -15,43 +14,28 @@ export const addStatsForCompletedGame = (
   const stats = { ...gameStats }
 
   stats.totalGames += 1
+  stats.currentStreak += 1
 
-  if (count >= MAX_CHALLENGES) {
-    // A fail situation
-    stats.currentStreak = 0
-    stats.gamesFailed += 1
-  } else {
-    stats.winDistribution[count] += 1
-    stats.currentStreak += 1
-
-    if (stats.bestStreak < stats.currentStreak) {
-      stats.bestStreak = stats.currentStreak
-    }
+  if (count >= stats.winDistribution.length) {
+    stats.winDistribution = stats.winDistribution.concat(new Array(count + 1 - stats.winDistribution.length).fill(0))
   }
+  stats.winDistribution[count] += 1
 
-  stats.successRate = getSuccessRate(stats)
+  if (stats.bestStreak < stats.currentStreak) {
+    stats.bestStreak = stats.currentStreak
+  }
 
   saveStatsToLocalStorage(stats)
   return stats
 }
 
 const defaultStats: GameStats = {
-  winDistribution: Array.from(new Array(MAX_CHALLENGES), () => 0),
-  gamesFailed: 0,
+  winDistribution: [],
   currentStreak: 0,
   bestStreak: 0,
   totalGames: 0,
-  successRate: 0,
 }
 
 export const loadStats = () => {
   return loadStatsFromLocalStorage() || defaultStats
-}
-
-const getSuccessRate = (gameStats: GameStats) => {
-  const { totalGames, gamesFailed } = gameStats
-
-  return Math.round(
-    (100 * (totalGames - gamesFailed)) / Math.max(totalGames, 1)
-  )
 }

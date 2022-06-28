@@ -51,7 +51,6 @@ function App() {
   const { showError: showErrorAlert, showSuccess: showSuccessAlert } =
     useAlert()
   const [currentGuess, setCurrentGuess] = useState('')
-  const [isGameWon, setIsGameWon] = useState(false)
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
   const [isStatsModalOpen, setIsStatsModalOpen] = useState(false)
   const [isMigrateStatsModalOpen, setIsMigrateStatsModalOpen] = useState(false)
@@ -75,6 +74,11 @@ function App() {
       return []
     }
     return loaded.guesses
+  })
+
+  const [isGameWon, setIsGameWon] = useState(() => {
+    const loaded = loadGameStateFromLocalStorage()
+    return loaded?.endWord ? true : false
   })
 
   const [stats, setStats] = useState(() => loadStats())
@@ -142,8 +146,8 @@ function App() {
   }
 
   useEffect(() => {
-    saveGameStateToLocalStorage({ guesses, endWord })
-  }, [guesses])
+    saveGameStateToLocalStorage({ guesses, endWord, isGameWon })
+  }, [guesses, isGameWon])
 
   useEffect(() => {
     if (isGameWon) {
