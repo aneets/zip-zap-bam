@@ -1,4 +1,4 @@
-# Zip! Zap! Zam! Bam!
+# Zip-zap-bam!
 
 This is a wordle-inspired gamed cloned from https://github.com/cwackerfuss/react-wordle.
 
