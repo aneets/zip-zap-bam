@@ -2,6 +2,7 @@ const gameStateKey = 'gameState'
 const highContrastKey = 'highContrast'
 
 export type StoredGameState = {
+  startWord: string
   guesses: string[]
   endWord: string
   isGameWon: boolean

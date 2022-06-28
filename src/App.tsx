@@ -70,7 +70,7 @@ function App() {
   const [isRevealing, setIsRevealing] = useState(false)
   const [guesses, setGuesses] = useState<string[]>(() => {
     const loaded = loadGameStateFromLocalStorage()
-    if (loaded?.endWord !== endWord) {
+    if (loaded?.endWord !== endWord || loaded?.startWord !== startWord) {
       return []
     }
     return loaded.guesses
@@ -78,7 +78,14 @@ function App() {
 
   const [isGameWon, setIsGameWon] = useState(() => {
     const loaded = loadGameStateFromLocalStorage()
-    return loaded?.endWord ? true : false
+    if (
+      !loaded?.isGameWon ||
+      loaded.endWord !== endWord ||
+      loaded.startWord !== startWord
+    ) {
+      return false
+    }
+    return true
   })
 
   const [stats, setStats] = useState(() => loadStats())
@@ -146,7 +153,7 @@ function App() {
   }
 
   useEffect(() => {
-    saveGameStateToLocalStorage({ guesses, endWord, isGameWon })
+    saveGameStateToLocalStorage({ startWord, guesses, endWord, isGameWon })
   }, [guesses, isGameWon])
 
   useEffect(() => {
