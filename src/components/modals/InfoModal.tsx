@@ -1,6 +1,4 @@
-import { Cell } from '../grid/Cell'
 import { CompletedRow } from '../grid/CompletedRow'
-import { CurrentRow } from '../grid/CurrentRow'
 import { EndRow } from '../grid/EndRow'
 import { BaseModal } from './BaseModal'
 import { MAX_EDIT_DISTANCE } from '../../constants/settings'
