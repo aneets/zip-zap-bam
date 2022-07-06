@@ -3,6 +3,7 @@ import {
   TOTAL_TRIES_TEXT,
   CURRENT_STREAK_TEXT,
   BEST_STREAK_TEXT,
+  MIN_PATH_TEXT,
 } from '../../constants/strings'
 
 type Props = {
@@ -27,6 +28,7 @@ const StatItem = ({
 export const StatBar = ({ gameStats }: Props) => {
   return (
     <div className="flex justify-center my-2">
+      <StatItem label={MIN_PATH_TEXT} value={gameStats.minPath.toString()} />
       <StatItem label={TOTAL_TRIES_TEXT} value={gameStats.totalGames} />
       <StatItem label={CURRENT_STREAK_TEXT} value={gameStats.currentStreak} />
       <StatItem label={BEST_STREAK_TEXT} value={gameStats.bestStreak} />

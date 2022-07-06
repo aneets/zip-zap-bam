@@ -21,6 +21,7 @@ const gameStatKey = 'gameStats'
 
 export type GameStats = {
   winDistribution: number[]
+  minPath: number
   currentStreak: number
   bestStreak: number
   totalGames: number

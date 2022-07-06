@@ -5,7 +5,7 @@ export const GAME_COPIED_MESSAGE = 'Game copied to clipboard'
 export const NOT_ENOUGH_LETTERS_MESSAGE = 'Not enough letters'
 export const WORD_NOT_FOUND_MESSAGE = 'Word not found'
 export const EDIT_DISTANCE_TOO_LARGE_MESSAGE = (max_edit_distance: number) =>
-  `Word must differ by at most ${max_edit_distance} insertion(s) / deletion(s) / substitution(s)`
+  `Word must differ by at most ${max_edit_distance} substitution(s)`
 export const HARD_MODE_ALERT_MESSAGE =
   'Hard Mode can only be enabled at the start!'
 export const HARD_MODE_DESCRIPTION =
@@ -26,6 +26,7 @@ export const SHARE_TEXT = 'Share'
 export const MIGRATE_BUTTON_TEXT = 'Transfer'
 export const MIGRATE_DESCRIPTION_TEXT =
   'Click here to transfer your statistics to a new device.'
+export const MIN_PATH_TEXT = 'Minimum intermediate words'
 export const TOTAL_TRIES_TEXT = 'Total tries'
 export const CURRENT_STREAK_TEXT = 'Current streak'
 export const BEST_STREAK_TEXT = 'Best streak'

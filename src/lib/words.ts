@@ -3,6 +3,7 @@ import { VALID_GUESSES } from '../constants/validGuesses'
 import { WRONG_SPOT_MESSAGE, NOT_CONTAINED_MESSAGE } from '../constants/strings'
 import { getGuessStatuses } from './statuses'
 import { default as GraphemeSplitter } from 'grapheme-splitter'
+import { MAX_EDIT_DISTANCE, MAX_MIN_PATH_LENGTH } from '../constants/settings'
 
 export const isWordInWordList = (word: string) => {
   return (
@@ -74,44 +75,57 @@ export const localeAwareUpperCase = (text: string) => {
     : text.toUpperCase()
 }
 
-// Compute the edit distance between the two given strings
-// From: https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#JavaScript
 export const getEditDistance = (a: string, b: string) => {
-  if (a.length === 0) return b.length
-  if (b.length === 0) return a.length
-
-  var matrix = []
-
-  // increment along the first column of each row
-  var i
-  for (i = 0; i <= b.length; i++) {
-    matrix[i] = [i]
+  let dist = 0
+  for (let i = 0; i < a.length; i++) {
+    if (a.charAt(i) !== b.charAt(i)) {
+      dist++
+    }
   }
+  return dist
+}
 
-  // increment each column in the first row
-  var j
-  for (j = 0; j <= a.length; j++) {
-    matrix[0][j] = j
+type Node = {
+  value: string
+  path: number
+  prev: Node | null
+}
+
+
+export const getMinPath = (a: string, b: string) => {
+  const start = a.toLowerCase()
+  const end = b.toLowerCase()
+
+  if (start === end) {
+    return []
   }
-
-  // Fill in the rest of the matrix
-  for (i = 1; i <= b.length; i++) {
-    for (j = 1; j <= a.length; j++) {
-      if (b.charAt(i - 1) === a.charAt(j - 1)) {
-        matrix[i][j] = matrix[i - 1][j - 1]
+  const visited = new Set()
+  const words = [...VALID_GUESSES]
+  const queue: [Node] = [{value:start, path:0, prev:null}]
+  while (queue.length > 0) {
+    let currentNode:Node | undefined | null = queue.shift()
+    let j = 0
+    while (j < words.length) {
+      if (getEditDistance(currentNode!.value, words[j]) <= MAX_EDIT_DISTANCE) {
+        visited.add(words[j])
+        if (currentNode!.path < MAX_MIN_PATH_LENGTH) {
+          if (words[j] === end) {
+            const path = []
+            while (currentNode !== null) {
+              path.push(currentNode!.value)
+              currentNode = currentNode!.prev
+            }
+            return path
+          }
+          queue.push({value:words[j], path:currentNode!.path+1, prev:currentNode!})
+          words.splice(j, 1)
+        }
       } else {
-        matrix[i][j] = Math.min(
-          matrix[i - 1][j - 1] + 1, // substitution
-          Math.min(
-            matrix[i][j - 1] + 1, // insertion
-            matrix[i - 1][j] + 1
-          )
-        ) // deletion
+        j++
       }
     }
   }
-
-  return matrix[b.length][a.length]
+  return []
 }
 
 export const getWordOfDay = () => {

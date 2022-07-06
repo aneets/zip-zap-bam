@@ -13,8 +13,9 @@ export const InfoModal = ({ isOpen, handleClose }: Props) => {
     <BaseModal title="How to play" isOpen={isOpen} handleClose={handleClose}>
       <p className="text-sm text-gray-500 dark:text-gray-300">
         {/* <p className="flex justify-left text-sm text-gray-500 dark:text-gray-300"> */}
-        Get from the start word to the end word by entering intermediate words.
-        Each word should differ from the last by at most {MAX_EDIT_DISTANCE}{' '}
+        This is a word ladder game. The goal is to get from the start word to
+        the end word by entering intermediate words. Each word should differ
+        from the last by at most {MAX_EDIT_DISTANCE}{' '}
         <a href="https://en.wikipedia.org/wiki/Hamming_distance">
           letter substitutions
         </a>
