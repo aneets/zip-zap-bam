@@ -2,7 +2,7 @@
   "name": "game",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://aneets.github.io/edit-distance",
+  "homepage": "https://aneets.github.io/zip-zap-bam",
   "scripts": {
     "build": "react-scripts build",
     "eject": "react-scripts eject",
