@@ -3,11 +3,7 @@ import {
   loadStatsFromLocalStorage,
   saveStatsToLocalStorage,
 } from './localStorage'
-import {
-  endWord,
-  getMinPath,
-  startWord
-} from './words'
+import { endWord, getMinPath, startWord } from './words'
 
 // In stats array elements 0-5 are successes in 1-6 trys
 
@@ -18,7 +14,7 @@ export const addStatsForCompletedGame = (
   // Count is number of incorrect guesses before end.
   const stats = { ...gameStats }
 
-  stats.minPath = getMinPath(startWord, endWord).length;
+  stats.minPath = getMinPath(startWord, endWord).length
   stats.totalGames += 1
   stats.currentStreak += 1
 

@@ -91,7 +91,6 @@ type Node = {
   prev: Node | null
 }
 
-
 export const getMinPath = (a: string, b: string) => {
   const start = a.toLowerCase()
   const end = b.toLowerCase()
@@ -101,9 +100,9 @@ export const getMinPath = (a: string, b: string) => {
   }
   const visited = new Set()
   const words = [...VALID_GUESSES]
-  const queue: [Node] = [{value:start, path:0, prev:null}]
+  const queue: [Node] = [{ value: start, path: 0, prev: null }]
   while (queue.length > 0) {
-    let currentNode:Node | undefined | null = queue.shift()
+    let currentNode: Node | undefined | null = queue.shift()
     let j = 0
     while (j < words.length) {
       if (getEditDistance(currentNode!.value, words[j]) <= MAX_EDIT_DISTANCE) {
@@ -117,7 +116,11 @@ export const getMinPath = (a: string, b: string) => {
             }
             return path
           }
-          queue.push({value:words[j], path:currentNode!.path+1, prev:currentNode!})
+          queue.push({
+            value: words[j],
+            path: currentNode!.path + 1,
+            prev: currentNode!,
+          })
           words.splice(j, 1)
         }
       } else {

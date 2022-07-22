@@ -13,8 +13,12 @@ describe('getMinPath', () => {
     expect(getMinPath('words', 'words')).toEqual([])
     expect(getMinPath('words', 'birds')).toEqual(['words'])
     expect(getMinPath('ahead', 'songs')).toEqual(['sonar', 'shear', 'ahead'])
-    expect(getMinPath('three', 'human')).toEqual(['buran', 'aurae', 'agree', 'three'])
+    expect(getMinPath('three', 'human')).toEqual([
+      'buran',
+      'aurae',
+      'agree',
+      'three',
+    ])
     expect(getMinPath('REACH', 'EQUAL')).toEqual([])
-
   })
 })
