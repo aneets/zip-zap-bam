@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/edit-distance/static/css/main.7c1ae80f.css",
-    "main.js": "/edit-distance/static/js/main.6d1e5258.js",
-    "static/js/787.b3f9d252.chunk.js": "/edit-distance/static/js/787.b3f9d252.chunk.js",
-    "index.html": "/edit-distance/index.html",
-    "main.7c1ae80f.css.map": "/edit-distance/static/css/main.7c1ae80f.css.map",
-    "main.6d1e5258.js.map": "/edit-distance/static/js/main.6d1e5258.js.map",
-    "787.b3f9d252.chunk.js.map": "/edit-distance/static/js/787.b3f9d252.chunk.js.map"
+    "main.css": "/zip-zap-bam/static/css/main.7c1ae80f.css",
+    "main.js": "/zip-zap-bam/static/js/main.2e35c3f3.js",
+    "static/js/787.b3f9d252.chunk.js": "/zip-zap-bam/static/js/787.b3f9d252.chunk.js",
+    "index.html": "/zip-zap-bam/index.html",
+    "main.7c1ae80f.css.map": "/zip-zap-bam/static/css/main.7c1ae80f.css.map",
+    "main.2e35c3f3.js.map": "/zip-zap-bam/static/js/main.2e35c3f3.js.map",
+    "787.b3f9d252.chunk.js.map": "/zip-zap-bam/static/js/787.b3f9d252.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.7c1ae80f.css",
-    "static/js/main.6d1e5258.js"
+    "static/js/main.2e35c3f3.js"
   ]
 }
